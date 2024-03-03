@@ -23,7 +23,21 @@ final theme = ThemeData(
       fontWeight: FontWeight.w400,
       letterSpacing: 0.25,
     ),
+    titleSmall: TextStyle(
+        color: AppColors.white,
+        fontFamily: "Roboto",
+        fontSize: 12,
+        fontWeight: FontWeight.w400,
+        letterSpacing: 0.4),
     titleMedium: TextStyle(
+      color: AppColors.black,
+      fontFamily: "Roboto",
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.15,
+    ),
+    titleLarge: TextStyle(
+      color: AppColors.black,
       fontFamily: "Roboto",
       fontSize: 32,
       fontWeight: FontWeight.w600,

@@ -24,7 +24,6 @@ class _CategoryItemState extends State<CategoryItem> {
   Widget build(BuildContext context) {
     return ChoiceChip(
       selected: widget.isSelected,
-      padding: const EdgeInsets.all(8.0),
       onSelected: (value) {
         widget.setSelectedIndex(widget.index);
         // TODO scroll to category
@@ -32,10 +31,15 @@ class _CategoryItemState extends State<CategoryItem> {
       labelStyle: widget.isSelected
           ? Theme.of(context).textTheme.labelMedium
           : Theme.of(context).textTheme.labelSmall,
-      label: Text(
-        widget.name,
-        textAlign: TextAlign.center,
+      label: Container(
+        alignment: Alignment.center,
+        height: 36,
+        child: Text(
+          widget.name,
+          textAlign: TextAlign.center,
+        ),
       ),
+      padding: EdgeInsets.zero,
       side: BorderSide.none,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),

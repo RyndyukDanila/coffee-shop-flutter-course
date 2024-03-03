@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_list.dart';
+import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuScreen extends StatelessWidget {
@@ -17,31 +19,55 @@ class MenuScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             flexibleSpace: const CategoriesList(),
           ),
-          SliverToBoxAdapter(
-            child: Text(
-              AppLocalizations.of(context)!.black_coffee,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          _buildCategoryTitle(
+            AppLocalizations.of(context)!.black_coffee,
+            Theme.of(context).textTheme.titleLarge!,
           ),
-          SliverToBoxAdapter(
-            child: Text(
-              AppLocalizations.of(context)!.milk_coffee,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          SliverPadding(
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+            sliver: DrinksGrid(drinks: allDrinks),
           ),
-          SliverToBoxAdapter(
-            child: Text(
-              AppLocalizations.of(context)!.tea,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          _buildCategoryTitle(
+            AppLocalizations.of(context)!.milk_coffee,
+            Theme.of(context).textTheme.titleLarge!,
           ),
-          SliverToBoxAdapter(
-            child: Text(
-              AppLocalizations.of(context)!.signature_drinks,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          SliverPadding(
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+            sliver: DrinksGrid(drinks: allDrinks),
+          ),
+          _buildCategoryTitle(
+            AppLocalizations.of(context)!.tea,
+            Theme.of(context).textTheme.titleLarge!,
+          ),
+          SliverPadding(
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+            sliver: DrinksGrid(drinks: allDrinks),
+          ),
+          _buildCategoryTitle(
+            AppLocalizations.of(context)!.signature_drinks,
+            Theme.of(context).textTheme.titleLarge!,
+          ),
+          SliverPadding(
+            padding:
+                const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+            sliver: DrinksGrid(drinks: allDrinks),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryTitle(String category, TextStyle style) {
+    return SliverPadding(
+      padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+      sliver: SliverToBoxAdapter(
+        child: Text(
+          category,
+          style: style,
+        ),
       ),
     );
   }
