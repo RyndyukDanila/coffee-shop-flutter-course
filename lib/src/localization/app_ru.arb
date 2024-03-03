@@ -1,3 +1,7 @@
 {
-    "title": "Кофейня"
+    "title": "Кофейня",
+    "black_coffee": "Черный кофе",
+    "milk_coffee": "Кофе с молоком",
+    "tea": "Чай",
+    "signature_drinks": "Авторские напитки"
 }

@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatefulWidget {
+  final String name;
+  late int index;
+  late int selectedIndex;
+  Function setSelectedIndex;
+  bool get isSelected => selectedIndex == index;
+
   CategoryItem({
     super.key,
     required this.name,
@@ -8,12 +14,6 @@ class CategoryItem extends StatefulWidget {
     required this.selectedIndex,
     required this.setSelectedIndex,
   });
-
-  final String name;
-  late int index;
-  late int selectedIndex;
-  Function setSelectedIndex;
-  bool get isSelected => selectedIndex == index;
 
   @override
   State<CategoryItem> createState() => _CategoryItemState();

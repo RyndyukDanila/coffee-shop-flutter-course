@@ -15,7 +15,6 @@ class _CategoriesListState extends State<CategoriesList> {
   @override
   void initState() {
     super.initState();
-
     selectedIndex = 0;
   }
 
