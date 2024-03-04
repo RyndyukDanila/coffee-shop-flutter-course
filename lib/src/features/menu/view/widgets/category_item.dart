@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/src/features/menu/models/category.dart';
 
 class CategoryItem extends StatefulWidget {
-  final String name;
+  final Category category;
   late int index;
   late int selectedIndex;
   Function setSelectedIndex;
@@ -9,7 +10,7 @@ class CategoryItem extends StatefulWidget {
 
   CategoryItem({
     super.key,
-    required this.name,
+    required this.category,
     required this.index,
     required this.selectedIndex,
     required this.setSelectedIndex,
@@ -26,7 +27,14 @@ class _CategoryItemState extends State<CategoryItem> {
       selected: widget.isSelected,
       onSelected: (value) {
         widget.setSelectedIndex(widget.index);
-        // TODO scroll to category
+        final targetContext = widget.category.key.currentContext;
+        if (targetContext != null) {
+          Scrollable.ensureVisible(
+            targetContext,
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
+          );
+        }
       },
       labelStyle: widget.isSelected
           ? Theme.of(context).textTheme.labelMedium
@@ -35,7 +43,7 @@ class _CategoryItemState extends State<CategoryItem> {
         alignment: Alignment.center,
         height: 36,
         child: Text(
-          widget.name,
+          widget.category.name,
           textAlign: TextAlign.center,
         ),
       ),

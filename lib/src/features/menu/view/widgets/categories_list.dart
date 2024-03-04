@@ -32,7 +32,7 @@ class _CategoriesListState extends State<CategoriesList> {
       itemCount: categoriesList.length,
       itemBuilder: (context, index) {
         return CategoryItem(
-          name: categoriesList[index],
+          category: categoriesList[index],
           index: index,
           selectedIndex: selectedIndex,
           setSelectedIndex: setSelectedIndex,
