@@ -44,4 +44,8 @@ final theme = ThemeData(
       letterSpacing: 0,
     ),
   ),
+  iconTheme: const IconThemeData(
+    color: AppColors.white,
+    size: 16,
+  ),
 );
