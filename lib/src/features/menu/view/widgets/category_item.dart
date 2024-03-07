@@ -3,17 +3,17 @@ import 'package:flutter_course/src/features/menu/models/category.dart';
 
 class CategoryItem extends StatefulWidget {
   final Category category;
-  late int index;
-  late int selectedIndex;
-  Function setSelectedIndex;
+  final int index;
+  final int selectedIndex;
+  final ValueChanged<int> onChanged;
   bool get isSelected => selectedIndex == index;
 
-  CategoryItem({
+  const CategoryItem({
     super.key,
     required this.category,
     required this.index,
     required this.selectedIndex,
-    required this.setSelectedIndex,
+    required this.onChanged,
   });
 
   @override
@@ -24,17 +24,18 @@ class _CategoryItemState extends State<CategoryItem> {
   @override
   Widget build(BuildContext context) {
     return ChoiceChip(
+      key: widget.category.categoryKey,
       selected: widget.isSelected,
       onSelected: (value) {
-        widget.setSelectedIndex(widget.index);
-        final targetContext = widget.category.key.currentContext;
-        if (targetContext != null) {
-          Scrollable.ensureVisible(
-            targetContext,
-            duration: const Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
-          );
-        }
+        widget.onChanged(widget.index);
+        // final targetContext = widget.category.titleKey.currentContext;
+        // if (targetContext != null) {
+        //   Scrollable.ensureVisible(
+        //     targetContext,
+        //     duration: const Duration(milliseconds: 400),
+        //     curve: Curves.easeInOut,
+        //   );
+        // }
       },
       labelStyle: widget.isSelected
           ? Theme.of(context).textTheme.labelMedium

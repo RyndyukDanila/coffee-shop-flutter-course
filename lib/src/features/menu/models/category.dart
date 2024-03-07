@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Category {
-  final GlobalKey key;
+  final GlobalKey titleKey;
+  final GlobalKey categoryKey;
   final String name;
 
   Category({
-    required this.key,
+    required this.titleKey,
+    required this.categoryKey,
     required this.name,
   });
 }

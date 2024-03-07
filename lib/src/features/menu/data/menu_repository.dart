@@ -13,14 +13,14 @@ class MenuRepository {
       image: ImageSources.oleato,
     ),
     Drink(
-      name: "Айс Латте",
-      price: 99,
-      image: ImageSources.iceLatte,
+      name: "Олеато",
+      price: 139,
+      image: ImageSources.oleato,
     ),
     Drink(
-      name: "Айс Латте",
-      price: 99,
-      image: ImageSources.iceLatte,
+      name: "Олеато",
+      price: 139,
+      image: ImageSources.oleato,
     ),
     Drink(
       name: "Олеато",
@@ -31,19 +31,23 @@ class MenuRepository {
 
   static final Map<Category, List<Drink>> menu = {
     Category(
-      key: GlobalKey(),
+      titleKey: GlobalKey(),
+      categoryKey: GlobalKey(),
       name: "Черный кофе",
     ): testDrinks,
     Category(
-      key: GlobalKey(),
+      titleKey: GlobalKey(),
+      categoryKey: GlobalKey(),
       name: "Кофе с молоком",
     ): testDrinks,
     Category(
-      key: GlobalKey(),
+      titleKey: GlobalKey(),
+      categoryKey: GlobalKey(),
       name: "Чай",
     ): testDrinks,
     Category(
-      key: GlobalKey(),
+      titleKey: GlobalKey(),
+      categoryKey: GlobalKey(),
       name: "Авторские напитки",
     ): testDrinks,
   };
