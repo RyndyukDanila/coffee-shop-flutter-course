@@ -9,15 +9,16 @@ class DrinksGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverGrid(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return DrinkCard(drink: drinks[index]);
-        },
-        childCount: drinks.length,
-      ),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200,
+    return GridView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: drinks.length,
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return DrinkCard(drink: drinks[index]);
+      },
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
         mainAxisExtent: 196,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,

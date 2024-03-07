@@ -4,13 +4,19 @@ import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_list.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
 
-class MenuScreen extends StatelessWidget {
-  const MenuScreen({super.key});
+class MenuScreen extends StatefulWidget {
+  MenuScreen({super.key});
 
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        cacheExtent: 3000,
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -18,10 +24,12 @@ class MenuScreen extends StatelessWidget {
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             flexibleSpace: const CategoriesList(),
           ),
-          ...MenuRepository.menu.entries.map(
-            (menuItem) {
-              return SliverMainAxisGroup(
-                slivers: [
+          SliverList.builder(
+            itemBuilder: (context, index) {
+              var menuItem = MenuRepository.menu.entries.elementAt(index);
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   _buildCategoryTitle(
                     menuItem.key.key,
                     menuItem.key.name,
@@ -33,38 +41,37 @@ class MenuScreen extends StatelessWidget {
                 ],
               );
             },
+            itemCount: MenuRepository.menu.length,
           ),
         ],
       ),
     );
   }
 
-  SliverPadding _buildDrinksGrid(List<Drink> drinks) {
-    return SliverPadding(
+  Widget _buildDrinksGrid(List<Drink> drinks) {
+    return Padding(
       padding: const EdgeInsets.only(
         bottom: 16.0,
         left: 16.0,
         right: 16.0,
       ),
-      sliver: DrinksGrid(
+      child: DrinksGrid(
         drinks: drinks,
       ),
     );
   }
 
-  SliverPadding _buildCategoryTitle(
+  Padding _buildCategoryTitle(
     GlobalKey key,
     String category,
     TextStyle style,
   ) {
-    return SliverPadding(
+    return Padding(
       key: key,
       padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
-      sliver: SliverToBoxAdapter(
-        child: Text(
-          category,
-          style: style,
-        ),
+      child: Text(
+        category,
+        style: style,
       ),
     );
   }
