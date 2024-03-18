@@ -5,7 +5,7 @@ import 'package:flutter_course/src/features/menu/view/widgets/categories_header.
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
 
 class MenuScreen extends StatefulWidget {
-  MenuScreen({super.key});
+  const MenuScreen({super.key});
 
   @override
   State<MenuScreen> createState() => _MenuScreenState();
@@ -14,6 +14,10 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   late final ScrollController scrollController;
   int selectedCategoryIndex = 0;
+
+  final int _categoryTitleHeight = 57;
+  final int _drinksGridRowHeight = 196;
+  final int _drinksGridGap = 16;
 
   @override
   void initState() {
@@ -47,13 +51,13 @@ class _MenuScreenState extends State<MenuScreen> {
             MenuRepository.menu.entries.elementAt(index).value.length;
         if (itemsInCategory.isEven) {
           totalItems += (itemsInCategory / 2).round();
-        } else if (itemsInCategory.isOdd) {
+        } else {
           totalItems += (itemsInCategory / 2).ceil();
         }
       }
 
-      int categoryPosition = ((57 * index) +
-          ((196 + 16) * totalItems)); // titles height + gridviews height
+      int categoryPosition = ((_categoryTitleHeight * index) +
+          ((_drinksGridRowHeight + _drinksGridGap) * totalItems));
       scrollController.animateTo(
         categoryPosition.toDouble(),
         duration: const Duration(milliseconds: 500),
@@ -80,8 +84,9 @@ class _MenuScreenState extends State<MenuScreen> {
         totalItems += (itemsInCategory / 2).ceil();
       }
 
-      double categoryPosition =
-          ((57 * i) + ((196 + 16) * totalItems)).toDouble();
+      double categoryPosition = ((_categoryTitleHeight * i) +
+              ((_drinksGridRowHeight + _drinksGridGap) * totalItems))
+          .toDouble();
 
       breakPoints.add(categoryPosition);
     }
@@ -114,6 +119,7 @@ class _MenuScreenState extends State<MenuScreen> {
         slivers: [
           SliverPersistentHeader(
             delegate: CategoriesHeader(
+              menu: MenuRepository.menu,
               onChanged: scrollToCategory,
               selectedIndex: selectedCategoryIndex,
             ),
@@ -126,7 +132,6 @@ class _MenuScreenState extends State<MenuScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildCategoryTitle(
-                    menuItem.key.titleKey,
                     menuItem.key.name,
                     Theme.of(context).textTheme.titleLarge!,
                   ),
@@ -156,13 +161,11 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Padding _buildCategoryTitle(
-    GlobalKey key,
+  Widget _buildCategoryTitle(
     String category,
     TextStyle style,
   ) {
     return Padding(
-      key: key,
       padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
       child: Text(
         category,

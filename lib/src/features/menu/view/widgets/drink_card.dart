@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
-import 'package:flutter_course/src/theme/app_colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DrinkCard extends StatefulWidget {
@@ -31,7 +30,6 @@ class _DrinkCardState extends State<DrinkCard> {
 
   @override
   void initState() {
-    _drinkQuantity = 0;
     super.initState();
   }
 
@@ -47,7 +45,7 @@ class _DrinkCardState extends State<DrinkCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image(
-            image: widget.drink.image,
+            image: AssetImage(widget.drink.image),
             fit: BoxFit.contain,
             height: 100,
           ),
@@ -69,7 +67,7 @@ class _DrinkCardState extends State<DrinkCard> {
     );
   }
 
-  ElevatedButton _buildAddToCartButton(BuildContext context) {
+  Widget _buildAddToCartButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
         setState(() {
@@ -94,7 +92,7 @@ class _DrinkCardState extends State<DrinkCard> {
     );
   }
 
-  Row _buildCartButtons(BuildContext context) {
+  Widget _buildCartButtons(BuildContext context) {
     return Row(
       children: [
         ElevatedButton(

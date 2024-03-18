@@ -24,18 +24,9 @@ class _CategoryItemState extends State<CategoryItem> {
   @override
   Widget build(BuildContext context) {
     return ChoiceChip(
-      key: widget.category.categoryKey,
       selected: widget.isSelected,
       onSelected: (value) {
         widget.onChanged(widget.index);
-        // final targetContext = widget.category.titleKey.currentContext;
-        // if (targetContext != null) {
-        //   Scrollable.ensureVisible(
-        //     targetContext,
-        //     duration: const Duration(milliseconds: 400),
-        //     curve: Curves.easeInOut,
-        //   );
-        // }
       },
       labelStyle: widget.isSelected
           ? Theme.of(context).textTheme.labelMedium

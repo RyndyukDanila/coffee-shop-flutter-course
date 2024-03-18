@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/theme/image_sources.dart';
@@ -6,7 +5,7 @@ import 'package:flutter_course/src/theme/image_sources.dart';
 class MenuRepository {
   // I don’t know what the data from the api will look like, so for now this is hard coded
 
-  static final testDrinks = [
+  static const testDrinks = [
     Drink(
       name: "Олеато",
       price: 139,
@@ -29,25 +28,21 @@ class MenuRepository {
     ),
   ];
 
-  static final Map<Category, List<Drink>> menu = {
+  static const Map<Category, List<Drink>> menu = {
     Category(
-      titleKey: GlobalKey(),
-      categoryKey: GlobalKey(),
+      id: 0,
       name: "Черный кофе",
     ): testDrinks,
     Category(
-      titleKey: GlobalKey(),
-      categoryKey: GlobalKey(),
+      id: 1,
       name: "Кофе с молоком",
     ): testDrinks,
     Category(
-      titleKey: GlobalKey(),
-      categoryKey: GlobalKey(),
+      id: 2,
       name: "Чай",
     ): testDrinks,
     Category(
-      titleKey: GlobalKey(),
-      categoryKey: GlobalKey(),
+      id: 3,
       name: "Авторские напитки",
     ): testDrinks,
   };
