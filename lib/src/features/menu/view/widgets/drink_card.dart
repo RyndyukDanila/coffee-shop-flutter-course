@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class DrinkCard extends StatefulWidget {
   const DrinkCard({super.key, required this.drink});
@@ -44,8 +45,10 @@ class _DrinkCardState extends State<DrinkCard> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image(
-            image: NetworkImage(widget.drink.image),
+          CachedNetworkImage(
+            imageUrl: widget.drink.image,
+            placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
             fit: BoxFit.contain,
             height: 100,
           ),
