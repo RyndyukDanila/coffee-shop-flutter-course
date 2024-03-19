@@ -30,7 +30,7 @@ class _CategoriesListState extends State<CategoriesList> {
   @override
   void didUpdateWidget(covariant CategoriesList oldWidget) {
     scrollController.animateTo(
-      (50 * widget.selectedIndex).toDouble(), // TODO percise scroll position
+      (60 * widget.selectedIndex).toDouble(), // TODO percise scroll position
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
     );
@@ -48,7 +48,7 @@ class _CategoriesListState extends State<CategoriesList> {
     return ListView.separated(
       controller: scrollController,
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.only(top: 32.0, left: 16, right: 16),
+      padding: const EdgeInsets.only(top: 32, left: 16, right: 16),
       itemCount: widget.categoriesList.length,
       itemBuilder: (context, index) {
         return CategoryItem(

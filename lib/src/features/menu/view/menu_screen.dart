@@ -16,8 +16,8 @@ class _MenuScreenState extends State<MenuScreen> {
   List<Category>? categoriesList;
   Map<Category, List<Drink>>? menu;
 
-  late final ScrollController scrollController;
   int selectedCategoryIndex = 0;
+  late final ScrollController scrollController;
 
   final int _categoryTitleHeight = 57;
   final int _drinksGridRowHeight = 196;
@@ -44,9 +44,7 @@ class _MenuScreenState extends State<MenuScreen> {
     });
 
     scrollController = ScrollController();
-    scrollController.addListener(() {
-      updateCategoryIndexOnScroll(scrollController.offset);
-    });
+    scrollController.addListener(updateCategoryIndexOnScroll);
     super.initState();
   }
 
@@ -57,9 +55,7 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   void scrollToCategory(int index) {
-    scrollController.removeListener(() {
-      updateCategoryIndexOnScroll;
-    });
+    scrollController.removeListener(updateCategoryIndexOnScroll);
     if (menu != null && selectedCategoryIndex != index) {
       setState(() {
         selectedCategoryIndex = index;
@@ -83,9 +79,7 @@ class _MenuScreenState extends State<MenuScreen> {
         curve: Curves.easeInOut,
       );
     }
-    scrollController.addListener(() {
-      updateCategoryIndexOnScroll(scrollController.offset);
-    });
+    scrollController.addListener(updateCategoryIndexOnScroll);
   }
 
   List<double> breakPoints = [];
@@ -106,10 +100,10 @@ class _MenuScreenState extends State<MenuScreen> {
 
       breakPoints.add(categoryPosition);
     }
-    debugPrint(drinks.length.toString());
   }
 
-  void updateCategoryIndexOnScroll(double offset) {
+  void updateCategoryIndexOnScroll() {
+    double offset = scrollController.offset;
     if (menu != null) {
       final drinks = menu!.values;
       for (var i = 0; i < drinks.length; i++) {
@@ -205,7 +199,11 @@ class _MenuScreenState extends State<MenuScreen> {
     TextStyle style,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0, left: 16.0, right: 16.0),
+      padding: const EdgeInsets.only(
+        bottom: 16.0,
+        left: 16.0,
+        right: 16.0,
+      ),
       child: Text(
         category,
         style: style,
