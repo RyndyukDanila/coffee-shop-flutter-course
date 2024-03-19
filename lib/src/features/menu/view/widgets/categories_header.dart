@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/category.dart';
-import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_list.dart';
 
 class CategoriesHeader extends SliverPersistentHeaderDelegate {
-  final Map<Category, List<Drink>> menu;
+  final List<Category> categoriesList;
   final ValueChanged<int> onChanged;
   final int selectedIndex;
 
   CategoriesHeader({
-    required this.menu,
+    required this.categoriesList,
     required this.onChanged,
     required this.selectedIndex,
   });
@@ -22,7 +21,7 @@ class CategoriesHeader extends SliverPersistentHeaderDelegate {
       height: 100,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: CategoriesList(
-        menu: menu,
+        categoriesList: categoriesList,
         onChanged: onChanged,
         selectedIndex: selectedIndex,
       ),

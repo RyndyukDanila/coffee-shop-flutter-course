@@ -45,7 +45,7 @@ class _DrinkCardState extends State<DrinkCard> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image(
-            image: AssetImage(widget.drink.image),
+            image: NetworkImage(widget.drink.image),
             fit: BoxFit.contain,
             height: 100,
           ),
@@ -59,9 +59,7 @@ class _DrinkCardState extends State<DrinkCard> {
           const SizedBox(
             height: 8,
           ),
-          isInCart
-              ? _buildCartButtons(context)
-              : _buildAddToCartButton(context),
+          isInCart ? _buildCartButtons(context) : _buildAddToCartButton(context),
         ],
       ),
     );

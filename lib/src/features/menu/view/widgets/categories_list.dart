@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/category.dart';
-import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/category_item.dart';
 
 class CategoriesList extends StatefulWidget {
-  final Map<Category, List<Drink>> menu;
+  final List<Category> categoriesList;
   final ValueChanged<int> onChanged;
   final int selectedIndex;
 
   const CategoriesList({
     super.key,
-    required this.menu,
+    required this.categoriesList,
     required this.onChanged,
     required this.selectedIndex,
   });
@@ -50,10 +49,10 @@ class _CategoriesListState extends State<CategoriesList> {
       controller: scrollController,
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.only(top: 32.0, left: 16, right: 16),
-      itemCount: widget.menu.entries.length,
+      itemCount: widget.categoriesList.length,
       itemBuilder: (context, index) {
         return CategoryItem(
-          category: widget.menu.entries.elementAt(index).key,
+          category: widget.categoriesList.elementAt(index),
           index: index,
           selectedIndex: widget.selectedIndex,
           onChanged: widget.onChanged,

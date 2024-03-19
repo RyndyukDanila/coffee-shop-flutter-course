@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/data/menu_repository.dart';
+import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_header.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
@@ -12,6 +13,9 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  List<Category>? categoriesList;
+  Map<Category, List<Drink>>? menu;
+
   late final ScrollController scrollController;
   int selectedCategoryIndex = 0;
 
@@ -21,7 +25,24 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   void initState() {
-    createBreakPoints();
+    MenuRepository menuRepository = MenuRepository();
+    menuRepository.getCategories().then(
+      (value) {
+        setState(() {
+          categoriesList = value;
+        });
+      },
+    );
+    menuRepository.getMenu().then(
+      (value) {
+        setState(() {
+          menu = value;
+        });
+      },
+    ).then((value) {
+      createBreakPoints(menu!);
+    });
+
     scrollController = ScrollController();
     scrollController.addListener(() {
       updateCategoryIndexOnScroll(scrollController.offset);
@@ -39,7 +60,7 @@ class _MenuScreenState extends State<MenuScreen> {
     scrollController.removeListener(() {
       updateCategoryIndexOnScroll;
     });
-    if (selectedCategoryIndex != index) {
+    if (menu != null && selectedCategoryIndex != index) {
       setState(() {
         selectedCategoryIndex = index;
       });
@@ -47,8 +68,7 @@ class _MenuScreenState extends State<MenuScreen> {
       int totalItems = 0;
 
       for (var i = 0; i < index; i++) {
-        final itemsInCategory =
-            MenuRepository.menu.entries.elementAt(index).value.length;
+        final itemsInCategory = menu!.entries.elementAt(index).value.length;
         if (itemsInCategory.isEven) {
           totalItems += (itemsInCategory / 2).round();
         } else {
@@ -56,8 +76,7 @@ class _MenuScreenState extends State<MenuScreen> {
         }
       }
 
-      int categoryPosition = ((_categoryTitleHeight * index) +
-          ((_drinksGridRowHeight + _drinksGridGap) * totalItems));
+      int categoryPosition = ((_categoryTitleHeight * index) + ((_drinksGridRowHeight + _drinksGridGap) * totalItems));
       scrollController.animateTo(
         categoryPosition.toDouble(),
         duration: const Duration(milliseconds: 500),
@@ -70,42 +89,42 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   List<double> breakPoints = [];
-  void createBreakPoints() {
-    final drinks = MenuRepository.menu.values;
+  void createBreakPoints(Map<Category, List<Drink>> menu) {
+    final drinks = menu.values;
 
     int totalItems = 0;
 
     for (var i = 0; i < drinks.length; i++) {
-      final itemsInCategory =
-          MenuRepository.menu.entries.elementAt(i).value.length;
+      final itemsInCategory = menu.entries.elementAt(i).value.length;
       if (itemsInCategory.isEven) {
         totalItems += (itemsInCategory / 2).round();
       } else if (itemsInCategory.isOdd) {
         totalItems += (itemsInCategory / 2).ceil();
       }
 
-      double categoryPosition = ((_categoryTitleHeight * i) +
-              ((_drinksGridRowHeight + _drinksGridGap) * totalItems))
-          .toDouble();
+      double categoryPosition = ((_categoryTitleHeight * i) + ((_drinksGridRowHeight + _drinksGridGap) * totalItems)).toDouble();
 
       breakPoints.add(categoryPosition);
     }
+    debugPrint(drinks.length.toString());
   }
 
   void updateCategoryIndexOnScroll(double offset) {
-    final drinks = MenuRepository.menu.values;
-    for (var i = 0; i < drinks.length; i++) {
-      if (i == 0) {
-        if ((offset < breakPoints.first) & (selectedCategoryIndex != 0)) {
-          setState(() {
-            selectedCategoryIndex = 0;
-          });
-        }
-      } else if ((offset >= breakPoints[i - 1]) & (offset < breakPoints[i])) {
-        if (selectedCategoryIndex != i) {
-          setState(() {
-            selectedCategoryIndex = i;
-          });
+    if (menu != null) {
+      final drinks = menu!.values;
+      for (var i = 0; i < drinks.length; i++) {
+        if (i == 0) {
+          if ((offset < breakPoints.first) & (selectedCategoryIndex != 0)) {
+            setState(() {
+              selectedCategoryIndex = 0;
+            });
+          }
+        } else if ((offset >= breakPoints[i - 1]) & (offset < breakPoints[i])) {
+          if (selectedCategoryIndex != i) {
+            setState(() {
+              selectedCategoryIndex = i;
+            });
+          }
         }
       }
     }
@@ -117,32 +136,52 @@ class _MenuScreenState extends State<MenuScreen> {
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
-          SliverPersistentHeader(
-            delegate: CategoriesHeader(
-              menu: MenuRepository.menu,
-              onChanged: scrollToCategory,
-              selectedIndex: selectedCategoryIndex,
-            ),
-            pinned: true,
-          ),
-          SliverList.builder(
-            itemBuilder: (context, index) {
-              var menuItem = MenuRepository.menu.entries.elementAt(index);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildCategoryTitle(
-                    menuItem.key.name,
-                    Theme.of(context).textTheme.titleLarge!,
+          (categoriesList == null)
+              ? SliverToBoxAdapter(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 48, bottom: 0),
+                    height: 100,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
-                  _buildDrinksGrid(
-                    menuItem.value,
+                )
+              : SliverPersistentHeader(
+                  delegate: CategoriesHeader(
+                    categoriesList: categoriesList!,
+                    onChanged: scrollToCategory,
+                    selectedIndex: selectedCategoryIndex,
                   ),
-                ],
-              );
-            },
-            itemCount: MenuRepository.menu.length,
-          ),
+                  pinned: true,
+                ),
+          (menu == null)
+              ? SliverToBoxAdapter(
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 48, bottom: 0),
+                    height: 100,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
+              : SliverList.builder(
+                  itemBuilder: (context, index) {
+                    var menuItem = menu!.entries.elementAt(index);
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildCategoryTitle(
+                          menuItem.key.name,
+                          Theme.of(context).textTheme.titleLarge!,
+                        ),
+                        _buildDrinksGrid(
+                          menuItem.value,
+                        ),
+                      ],
+                    );
+                  },
+                  itemCount: menu!.length,
+                ),
         ],
       ),
     );
