@@ -7,6 +7,7 @@ import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_header.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
 import 'package:flutter_course/src/theme/image_sources.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -183,14 +184,18 @@ class _MenuScreenState extends State<MenuScreen> {
             floatingActionButton: BlocBuilder<CartBloc, CartState>(
               builder: (context, state) {
                 if (state is CartReady) {
-                  return FloatingActionButton.extended(
-                    backgroundColor: Theme.of(context).cardTheme.color,
-                    icon: const Icon(
-                      Icons.shopping_bag,
-                      size: 21,
+                  return SizedBox(
+                    height: 45,
+                    child: FloatingActionButton.extended(
+                      backgroundColor: Theme.of(context).cardTheme.color,
+                      icon: SvgPicture.asset(ImageSources.shoppingBagIcon),
+                      label: Text(
+                        '${state.cartPrice} ₽',
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      onPressed: () {},
                     ),
-                    label: Text('${state.cartPrice} ₽'),
-                    onPressed: () {},
                   );
                 }
                 return Container();
