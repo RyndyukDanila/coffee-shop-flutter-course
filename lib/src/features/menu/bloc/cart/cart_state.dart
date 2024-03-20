@@ -13,5 +13,10 @@ class CartInitial extends CartState {
 }
 
 class CartReady extends CartState {
-  CartReady({required super.orderMap});
+  CartReady({
+    required super.orderMap,
+    required this.cartPrice,
+  });
+
+  final int cartPrice;
 }

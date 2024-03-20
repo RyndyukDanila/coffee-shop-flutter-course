@@ -6,6 +6,7 @@ import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_header.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
+import 'package:flutter_course/src/theme/image_sources.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -98,83 +99,103 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<MenuBloc, MenuState>(
-        bloc: _menuBloc,
-        builder: (context, state) {
-          if (state is MenuReady) {
-            createBreakPoints(state.menu);
-            return BlocProvider(
-              create: (context) => CartBloc(),
-              child: CustomScrollView(
-                controller: scrollController,
-                slivers: [
-                  SliverPersistentHeader(
-                    delegate: CategoriesHeader(
-                      categoriesList: state.categoriesList,
-                      onChanged: scrollToCategory,
-                      selectedIndex: selectedCategoryIndex,
-                    ),
-                    pinned: true,
-                  ),
-                  SliverList.builder(
-                    itemBuilder: (context, index) {
-                      var menuItem = state.menu.entries.elementAt(index);
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildCategoryTitle(
-                            menuItem.key.name,
-                            Theme.of(context).textTheme.titleLarge!,
-                          ),
-                          _buildDrinksGrid(
-                            menuItem.value,
-                          ),
-                        ],
-                      );
-                    },
-                    itemCount: state.menu.length,
-                  ),
-                ],
-              ),
-            );
-          } else if (state is MenuError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    'Что-то пошло не так :(',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _menuBloc.add(LoadMenu()),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+    return BlocProvider(
+      create: (context) => CartBloc(),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            body: BlocBuilder<MenuBloc, MenuState>(
+              bloc: _menuBloc,
+              builder: (context, state) {
+                if (state is MenuReady) {
+                  createBreakPoints(state.menu);
+                  return CustomScrollView(
+                    controller: scrollController,
+                    slivers: [
+                      SliverPersistentHeader(
+                        delegate: CategoriesHeader(
+                          categoriesList: state.categoriesList,
+                          onChanged: scrollToCategory,
+                          selectedIndex: selectedCategoryIndex,
+                        ),
+                        pinned: true,
                       ),
-                      minimumSize: const Size(0, 0),
-                      elevation: 0,
-                      fixedSize: const Size.fromHeight(40),
-                      backgroundColor: Theme.of(context).cardTheme.color,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      SliverList.builder(
+                        itemBuilder: (context, index) {
+                          var menuItem = state.menu.entries.elementAt(index);
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildCategoryTitle(
+                                menuItem.key.name,
+                                Theme.of(context).textTheme.titleLarge!,
+                              ),
+                              _buildDrinksGrid(
+                                menuItem.value,
+                              ),
+                            ],
+                          );
+                        },
+                        itemCount: state.menu.length,
+                      ),
+                    ],
+                  );
+                } else if (state is MenuError) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Что-то пошло не так :(',
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        ElevatedButton(
+                          onPressed: () => _menuBloc.add(LoadMenu()),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            minimumSize: const Size(0, 0),
+                            elevation: 0,
+                            fixedSize: const Size.fromHeight(40),
+                            backgroundColor: Theme.of(context).cardTheme.color,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            'Перезагрузить',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text(
-                      'Перезагрузить',
-                      style: Theme.of(context).textTheme.titleSmall,
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+            floatingActionButton: BlocBuilder<CartBloc, CartState>(
+              builder: (context, state) {
+                if (state is CartReady) {
+                  return FloatingActionButton.extended(
+                    backgroundColor: Theme.of(context).cardTheme.color,
+                    icon: const Icon(
+                      Icons.shopping_bag,
+                      size: 21,
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
+                    label: Text('${state.cartPrice} ₽'),
+                    onPressed: () {},
+                  );
+                }
+                return Container();
+              },
+            ),
           );
         },
       ),

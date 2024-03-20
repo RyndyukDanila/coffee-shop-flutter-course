@@ -4,7 +4,7 @@ class Drink {
   final int id;
   final String name;
   final Category category;
-  final double price;
+  final int price;
   final String image;
 
   const Drink({
@@ -19,7 +19,7 @@ class Drink {
         id: json['id'] as int,
         name: json['name'] as String,
         category: (Category.fromJson(json['category'] as Map<String, dynamic>)),
-        price: double.parse(((json['prices'] as List<dynamic>).first as Map<String, dynamic>)['value'].toString()),
+        price: double.parse(((json['prices'] as List<dynamic>).first as Map<String, dynamic>)['value'].toString()).floor(),
         image: json['imageUrl'] as String,
       );
 }

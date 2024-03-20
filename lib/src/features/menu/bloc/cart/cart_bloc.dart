@@ -13,6 +13,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(
           CartReady(
             orderMap: state.orderMap,
+            cartPrice: countCartPrice(state.orderMap),
           ),
         );
       },
@@ -25,19 +26,38 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         } else {
           state.orderMap[event.drink] = count - 1;
         }
-        emit(
-          CartReady(
-            orderMap: state.orderMap,
-          ),
-        );
+        if (state.orderMap.isNotEmpty) {
+          emit(
+            CartReady(
+              orderMap: state.orderMap,
+              cartPrice: countCartPrice(state.orderMap),
+            ),
+          );
+        } else {
+          emit(
+            CartInitial(
+              orderMap: {},
+            ),
+          );
+        }
       },
     );
     on<DeleteCart>((event, emit) {
       emit(
-        CartReady(
+        CartInitial(
           orderMap: {},
         ),
       );
     });
+  }
+
+  int countCartPrice(Map<Drink, int> orderMap) {
+    int cartPrice = 0;
+    for (var drink in orderMap.entries) {
+      final drinkPrice = drink.key.price;
+      final drinkCount = drink.value;
+      cartPrice += drinkPrice * drinkCount;
+    }
+    return cartPrice;
   }
 }
