@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_course/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:flutter_course/src/features/menu/bloc/menu/menu_bloc.dart';
 import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
@@ -103,36 +104,39 @@ class _MenuScreenState extends State<MenuScreen> {
         builder: (context, state) {
           if (state is MenuReady) {
             createBreakPoints(state.menu);
-            return CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverPersistentHeader(
-                  delegate: CategoriesHeader(
-                    categoriesList: state.categoriesList,
-                    onChanged: scrollToCategory,
-                    selectedIndex: selectedCategoryIndex,
+            return BlocProvider(
+              create: (context) => CartBloc(),
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  SliverPersistentHeader(
+                    delegate: CategoriesHeader(
+                      categoriesList: state.categoriesList,
+                      onChanged: scrollToCategory,
+                      selectedIndex: selectedCategoryIndex,
+                    ),
+                    pinned: true,
                   ),
-                  pinned: true,
-                ),
-                SliverList.builder(
-                  itemBuilder: (context, index) {
-                    var menuItem = state.menu.entries.elementAt(index);
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildCategoryTitle(
-                          menuItem.key.name,
-                          Theme.of(context).textTheme.titleLarge!,
-                        ),
-                        _buildDrinksGrid(
-                          menuItem.value,
-                        ),
-                      ],
-                    );
-                  },
-                  itemCount: state.menu.length,
-                ),
-              ],
+                  SliverList.builder(
+                    itemBuilder: (context, index) {
+                      var menuItem = state.menu.entries.elementAt(index);
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildCategoryTitle(
+                            menuItem.key.name,
+                            Theme.of(context).textTheme.titleLarge!,
+                          ),
+                          _buildDrinksGrid(
+                            menuItem.value,
+                          ),
+                        ],
+                      );
+                    },
+                    itemCount: state.menu.length,
+                  ),
+                ],
+              ),
             );
           } else if (state is MenuError) {
             return Center(

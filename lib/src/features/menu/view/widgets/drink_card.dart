@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_course/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -13,22 +15,6 @@ class DrinkCard extends StatefulWidget {
 }
 
 class _DrinkCardState extends State<DrinkCard> {
-  late int _drinkQuantity = 0;
-
-  int get drinkQuantity {
-    return _drinkQuantity;
-  }
-
-  set drinkQuantity(int value) {
-    if (value >= 0 && value <= 10) {
-      _drinkQuantity = value;
-    }
-  }
-
-  bool get isInCart {
-    return drinkQuantity > 0;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -62,7 +48,12 @@ class _DrinkCardState extends State<DrinkCard> {
           const SizedBox(
             height: 8,
           ),
-          isInCart ? _buildCartButtons(context) : _buildAddToCartButton(context),
+          BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              final isInCart = state.orderMap[widget.drink];
+              return isInCart != null ? _buildCartButtons(context) : _buildAddToCartButton(context);
+            },
+          ),
         ],
       ),
     );
@@ -71,9 +62,7 @@ class _DrinkCardState extends State<DrinkCard> {
   Widget _buildAddToCartButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        setState(() {
-          drinkQuantity++;
-        });
+        BlocProvider.of<CartBloc>(context).add(IncrementDrinkInCart(drink: widget.drink));
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
@@ -98,9 +87,7 @@ class _DrinkCardState extends State<DrinkCard> {
       children: [
         ElevatedButton(
           onPressed: () {
-            setState(() {
-              drinkQuantity--;
-            });
+            BlocProvider.of<CartBloc>(context).add(DecrementDrinkInCart(drink: widget.drink));
           },
           style: getDefaultElevatedButtonStyle(const Size(24, 24)),
           child: Icon(
@@ -115,9 +102,13 @@ class _DrinkCardState extends State<DrinkCard> {
         ElevatedButton(
           onPressed: () {},
           style: getDefaultElevatedButtonStyle(const Size(52, 24)),
-          child: Text(
-            "$drinkQuantity",
-            style: Theme.of(context).textTheme.titleSmall,
+          child: BlocBuilder<CartBloc, CartState>(
+            builder: (context, state) {
+              return Text(
+                "${state.orderMap[widget.drink]}",
+                style: Theme.of(context).textTheme.titleSmall,
+              );
+            },
           ),
         ),
         const SizedBox(
@@ -125,9 +116,7 @@ class _DrinkCardState extends State<DrinkCard> {
         ),
         ElevatedButton(
           onPressed: () {
-            setState(() {
-              drinkQuantity++;
-            });
+            BlocProvider.of<CartBloc>(context).add(IncrementDrinkInCart(drink: widget.drink));
           },
           style: getDefaultElevatedButtonStyle(const Size(24, 24)),
           child: Icon(
