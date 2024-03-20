@@ -39,7 +39,10 @@ class OrderBottomSheet extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  BlocProvider.of<CartBloc>(context).add(DeleteCart());
+                  Navigator.of(context).pop();
+                },
                 icon: const Icon(Icons.delete_outline),
                 color: Theme.of(context).bottomSheetTheme.dragHandleColor,
                 iconSize: 24,
