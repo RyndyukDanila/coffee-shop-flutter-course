@@ -9,11 +9,8 @@ class DrinksGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: EdgeInsets.zero,
+    return SliverGrid.builder(
       itemCount: drinks.length,
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
       itemBuilder: (context, index) {
         return DrinkCard(drink: drinks[index]);
       },

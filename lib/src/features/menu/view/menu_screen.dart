@@ -121,24 +121,19 @@ class _MenuScreenState extends State<MenuScreen> {
                         ),
                         pinned: true,
                       ),
-                      SliverList.builder(
-                        itemBuilder: (context, index) {
-                          var menuItem = state.menu.entries.elementAt(index);
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildCategoryTitle(
-                                menuItem.key.name,
-                                Theme.of(context).textTheme.titleLarge!,
-                              ),
-                              _buildDrinksGrid(
-                                menuItem.value,
-                              ),
-                            ],
-                          );
-                        },
-                        itemCount: state.menu.length,
-                      ),
+                      ...state.menu.entries.map((menuItem) {
+                        return SliverMainAxisGroup(
+                          slivers: [
+                            _buildCategoryTitle(
+                              menuItem.key.name,
+                              Theme.of(context).textTheme.titleLarge!,
+                            ),
+                            _buildDrinksGrid(
+                              menuItem.value,
+                            ),
+                          ],
+                        );
+                      }),
                     ],
                   );
                 } else if (state is MenuError) {
@@ -208,13 +203,13 @@ class _MenuScreenState extends State<MenuScreen> {
   }
 
   Widget _buildDrinksGrid(List<Drink> drinks) {
-    return Padding(
+    return SliverPadding(
       padding: const EdgeInsets.only(
         bottom: 16.0,
         left: 16.0,
         right: 16.0,
       ),
-      child: DrinksGrid(
+      sliver: DrinksGrid(
         drinks: drinks,
       ),
     );
@@ -224,15 +219,17 @@ class _MenuScreenState extends State<MenuScreen> {
     String category,
     TextStyle style,
   ) {
-    return Padding(
+    return SliverPadding(
       padding: const EdgeInsets.only(
         bottom: 16.0,
         left: 16.0,
         right: 16.0,
       ),
-      child: Text(
-        category,
-        style: style,
+      sliver: SliverToBoxAdapter(
+        child: Text(
+          category,
+          style: style,
+        ),
       ),
     );
   }
