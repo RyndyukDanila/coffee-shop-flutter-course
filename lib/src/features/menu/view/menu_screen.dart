@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_course/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:flutter_course/src/features/menu/bloc/menu/menu_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/categories_header.dart';
 import 'package:flutter_course/src/features/menu/view/widgets/drinks_grid.dart';
+import 'package:flutter_course/src/features/menu/view/widgets/order_bottom_sheet.dart';
 import 'package:flutter_course/src/theme/image_sources.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -100,8 +102,17 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CartBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MenuBloc>(
+          lazy: false,
+          create: (context) => MenuBloc(),
+        ),
+        BlocProvider<CartBloc>(
+          lazy: false,
+          create: (context) => CartBloc(),
+        ),
+      ],
       child: Builder(
         builder: (context) {
           return Scaffold(
@@ -152,15 +163,8 @@ class _MenuScreenState extends State<MenuScreen> {
                         ElevatedButton(
                           onPressed: () => _menuBloc.add(LoadMenu()),
                           style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            minimumSize: const Size(0, 0),
-                            elevation: 0,
                             fixedSize: const Size.fromHeight(40),
-                            backgroundColor: Theme.of(context).cardTheme.color,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
                           child: Text(
                             'Перезагрузить',
@@ -189,7 +193,9 @@ class _MenuScreenState extends State<MenuScreen> {
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      onPressed: () {},
+                      onPressed: () {
+                        _displayOrderBottomSheet(context);
+                      },
                     ),
                   );
                 }
@@ -231,6 +237,19 @@ class _MenuScreenState extends State<MenuScreen> {
           style: style,
         ),
       ),
+    );
+  }
+
+  Future _displayOrderBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) {
+        return BlocProvider.value(
+          value: BlocProvider.of<CartBloc>(context),
+          child: OrderBottomSheet(),
+        );
+      },
     );
   }
 }

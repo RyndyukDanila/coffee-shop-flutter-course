@@ -131,15 +131,7 @@ class _DrinkCardState extends State<DrinkCard> {
 
   ButtonStyle getDefaultElevatedButtonStyle(Size size) {
     return ElevatedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      minimumSize: const Size(0, 0),
-      elevation: 0,
       fixedSize: size,
-      backgroundColor: Theme.of(context).cardTheme.color,
-      padding: EdgeInsets.zero,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
     );
   }
 }
