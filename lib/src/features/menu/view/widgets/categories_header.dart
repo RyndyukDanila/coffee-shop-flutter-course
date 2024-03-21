@@ -15,7 +15,10 @@ class CategoriesHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return Container(
       padding: const EdgeInsets.only(top: 24, bottom: 8),
       height: 100,

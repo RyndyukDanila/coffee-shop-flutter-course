@@ -1,61 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_course/src/features/menu/models/category.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
-import 'package:flutter_course/src/theme/image_sources.dart';
 
 class MenuRepository {
   final Dio dio = Dio();
-
-  static const testDrinks = [
-    Drink(
-      id: 0,
-      name: "Олеато",
-      category: Category(id: 0, name: 'name'),
-      price: 139,
-      image: ImageSources.oleato,
-    ),
-    Drink(
-      id: 0,
-      name: "Олеато",
-      category: Category(id: 0, name: 'name'),
-      price: 139,
-      image: ImageSources.oleato,
-    ),
-    Drink(
-      id: 0,
-      name: "Олеато",
-      category: Category(id: 0, name: 'name'),
-      price: 139,
-      image: ImageSources.oleato,
-    ),
-    Drink(
-      id: 0,
-      name: "Олеато",
-      category: Category(id: 0, name: 'name'),
-      price: 139,
-      image: ImageSources.oleato,
-    ),
-  ];
-
-  // static const Map<Category, List<Drink>> menu = {
-  //   Category(
-  //     id: 0,
-  //     name: "Черный кофе",
-  //   ): testDrinks,
-  //   Category(
-  //     id: 1,
-  //     name: "Кофе с молоком",
-  //   ): testDrinks,
-  //   Category(
-  //     id: 2,
-  //     name: "Чай",
-  //   ): testDrinks,
-  //   Category(
-  //     id: 3,
-  //     name: "Авторские напитки",
-  //   ): testDrinks,
-  // };
 
   Future<List<Category>> getCategories() async {
     final response = await dio.get(

@@ -11,7 +11,7 @@ class MenuBloc extends Bloc<MenuEvent, MenuState> {
     on<LoadMenu>((event, emit) async {
       try {
         emit(MenuLoading());
-        MenuRepository menuRepository = MenuRepository();
+        final MenuRepository menuRepository = MenuRepository();
         final menu = await menuRepository.getMenu();
         final categoriesList = menu.keys.toList();
         emit(MenuReady(menu: menu, categoriesList: categoriesList));

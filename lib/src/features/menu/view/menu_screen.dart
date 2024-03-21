@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_course/src/features/menu/bloc/cart/cart_bloc.dart';
 import 'package:flutter_course/src/features/menu/bloc/menu/menu_bloc.dart';
@@ -73,14 +72,15 @@ class _MenuScreenState extends State<MenuScreen> {
         totalItems += (itemsInCategory / 2).ceil();
       }
 
-      double categoryPosition = _headerHeight + ((_categoryTitleHeight * i) + ((_drinksGridRowHeight + _drinksGridGap) * totalItems)).toDouble();
+      final double categoryPosition =
+          _headerHeight + ((_categoryTitleHeight * i) + ((_drinksGridRowHeight + _drinksGridGap) * totalItems)).toDouble();
 
       breakPoints.add(categoryPosition);
     }
   }
 
   void updateCategoryIndexOnScroll() {
-    double offset = scrollController.offset;
+    final double offset = scrollController.offset;
     if (menuLength != null) {
       for (var i = 0; i < menuLength!; i++) {
         if (i == 0) {
@@ -240,14 +240,14 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  Future _displayOrderBottomSheet(BuildContext context) {
+  Future<dynamic> _displayOrderBottomSheet(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (_) {
         return BlocProvider.value(
           value: BlocProvider.of<CartBloc>(context),
-          child: OrderBottomSheet(),
+          child: const OrderBottomSheet(),
         );
       },
     );
