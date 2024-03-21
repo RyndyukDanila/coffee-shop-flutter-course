@@ -68,13 +68,8 @@ class OrderBottomSheet extends StatelessWidget {
               Expanded(
                 child: BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
-                    if (state is CartReady) {
-                      return OrderBottomSheetList(
-                        orderMap: state.orderMap,
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(),
+                    return OrderBottomSheetList(
+                      orderMap: state.orderMap,
                     );
                   },
                 ),
@@ -82,38 +77,64 @@ class OrderBottomSheet extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: BlocBuilder<CartBloc, CartState>(
-                        builder: (context, state) {
-                          return Container(
-                            padding: EdgeInsets.zero,
-                            alignment: Alignment.centerLeft,
-                            height: 72,
-                            child: Text(
-                              'Возникла ошибка при заказе',
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                          );
-                        },
+              BlocListener<CartBloc, CartState>(
+                listener: (context, state) {
+                  if (state is CartSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: const Duration(seconds: 2),
+                        content: _buildSnackBarContainer(
+                          context,
+                          'Заказ создан',
+                        ),
                       ),
-                    ),
-                  );
+                    );
+                    BlocProvider.of<CartBloc>(context).add(DeleteCart());
+                    Navigator.of(context).pop();
+                  } else if (state is CartFailure) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: _buildSnackBarContainer(
+                          context,
+                          'Возникла ошибка при заказе',
+                        ),
+                      ),
+                    );
+                    BlocProvider.of<CartBloc>(context).add(ReloadCart());
+                  }
                 },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.maxFinite, 56),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: Text(
-                  'Оформить заказ',
-                  style: Theme.of(context).textTheme.labelLarge,
+                child: ElevatedButton(
+                  onPressed: () {
+                    BlocProvider.of<CartBloc>(context).add(PostCart());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.maxFinite, 56),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    'Оформить заказ',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container _buildSnackBarContainer(
+    BuildContext context,
+    String text,
+  ) {
+    return Container(
+      padding: EdgeInsets.zero,
+      alignment: Alignment.centerLeft,
+      height: 72,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.labelLarge,
       ),
     );
   }

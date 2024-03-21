@@ -20,3 +20,15 @@ class CartReady extends CartState {
 
   final int cartPrice;
 }
+
+class CartSuccess extends CartState {
+  CartSuccess({
+    required super.orderMap,
+  });
+}
+
+class CartFailure extends CartState {
+  CartFailure({
+    required super.orderMap,
+  });
+}

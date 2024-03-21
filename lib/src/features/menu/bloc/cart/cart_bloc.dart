@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_course/src/features/menu/data/cart_repository.dart';
 import 'package:flutter_course/src/features/menu/models/drink.dart';
 
 part 'cart_event.dart';
@@ -42,13 +43,40 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }
       },
     );
-    on<DeleteCart>((event, emit) {
-      emit(
-        CartInitial(
-          orderMap: {},
-        ),
-      );
-    });
+    on<DeleteCart>(
+      (event, emit) {
+        emit(
+          CartInitial(
+            orderMap: {},
+          ),
+        );
+      },
+    );
+    on<PostCart>(
+      (event, emit) async {
+        final CartRepository cartRepository = CartRepository();
+        final isSuccess = await cartRepository.postCart(state.orderMap);
+        if (isSuccess) {
+          emit(
+            CartSuccess(orderMap: state.orderMap),
+          );
+        } else {
+          emit(
+            CartFailure(orderMap: state.orderMap),
+          );
+        }
+      },
+    );
+    on<ReloadCart>(
+      (event, emit) {
+        emit(
+          CartReady(
+            orderMap: state.orderMap,
+            cartPrice: countCartPrice(state.orderMap),
+          ),
+        );
+      },
+    );
   }
 
   int countCartPrice(Map<Drink, int> orderMap) {

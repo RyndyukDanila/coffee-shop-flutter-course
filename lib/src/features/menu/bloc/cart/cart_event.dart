@@ -19,3 +19,7 @@ class DecrementDrinkInCart extends CartEvent {
 }
 
 class DeleteCart extends CartEvent {}
+
+class PostCart extends CartEvent {}
+
+class ReloadCart extends CartEvent {}

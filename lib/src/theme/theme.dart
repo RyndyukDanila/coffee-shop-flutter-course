@@ -95,4 +95,7 @@ final theme = ThemeData(
     surfaceTintColor: AppColors.white,
     backgroundColor: AppColors.white,
   ),
+  snackBarTheme: const SnackBarThemeData(
+    backgroundColor: AppColors.snackbar,
+  ),
 );
