@@ -9,83 +9,111 @@ class OrderBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.8,
-      padding: const EdgeInsets.all(10),
+      height: MediaQuery.of(context).size.height * 0.9,
+      padding: const EdgeInsets.only(top: 18),
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.surfaceTintColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
       ),
-      child: Column(
-        children: [
-          Container(
-            width: Theme.of(context).bottomSheetTheme.dragHandleSize?.width,
-            height: Theme.of(context).bottomSheetTheme.dragHandleSize?.height,
-            decoration: BoxDecoration(
-              color: Theme.of(context).bottomSheetTheme.dragHandleColor,
-              borderRadius: BorderRadius.circular(2),
-            ),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).cardTheme.surfaceTintColor,
+        body: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 10,
+            left: 10,
+            right: 10,
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  'Ваш заказ',
-                  style: Theme.of(context).textTheme.displayLarge,
+              Container(
+                width: Theme.of(context).bottomSheetTheme.dragHandleSize?.width,
+                height: Theme.of(context).bottomSheetTheme.dragHandleSize?.height,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).bottomSheetTheme.dragHandleColor,
+                  borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  BlocProvider.of<CartBloc>(context).add(DeleteCart());
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(Icons.delete_outline),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Ваш заказ',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      BlocProvider.of<CartBloc>(context).add(DeleteCart());
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                    color: Theme.of(context).bottomSheetTheme.dragHandleColor,
+                    iconSize: 24,
+                  ),
+                ],
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 1,
                 color: Theme.of(context).bottomSheetTheme.dragHandleColor,
-                iconSize: 24,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                child: BlocBuilder<CartBloc, CartState>(
+                  builder: (context, state) {
+                    if (state is CartReady) {
+                      return OrderBottomSheetList(
+                        orderMap: state.orderMap,
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: BlocBuilder<CartBloc, CartState>(
+                        builder: (context, state) {
+                          return Container(
+                            padding: EdgeInsets.zero,
+                            alignment: Alignment.centerLeft,
+                            height: 72,
+                            child: Text(
+                              'Возникла ошибка при заказе',
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.maxFinite, 56),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(
+                  'Оформить заказ',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
               ),
             ],
           ),
-          Container(
-            width: double.maxFinite,
-            height: 1,
-            color: Theme.of(context).bottomSheetTheme.dragHandleColor,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: BlocBuilder<CartBloc, CartState>(
-              builder: (context, state) {
-                if (state is CartReady) {
-                  return OrderBottomSheetList(
-                    orderMap: state.orderMap,
-                  );
-                }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.maxFinite, 56),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-            ),
-            child: Text(
-              'Оформить заказ',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
